@@ -1,5 +1,7 @@
+from sqlite3 import Date
+
 import argh
-from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
+from sqlalchemy import Column, ForeignKey, Integer, String, create_engine, MetaData, Table, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 import sqlite3
@@ -7,22 +9,18 @@ import sqlite3
 
 def main():
     try:
-        conn = sqlite3.connect('QScraper.db')
+        engine = create_engine('sqlite:///QScraper.db')
     except Exception as e:
         print(e)
-    else:
-        c = conn.cursor()
-        c.execute(''' SELECT 'offers' FROM sqlite_master WHERE type='table' ''')
-        baza = create_engine('sqlite:///test.db')  # ':memory:'
-
-        BazaModel = declarative_base()
-        class Uczen(conn):
-            __tablename__ = 'uczen'
-            id = Column(Integer, primary_key=True)
-            imie = Column(String(100), nullable=False)
-            nazwisko = Column(String(100), nullable=False)
-            klasa_id = Column(Integer, ForeignKey('klasa.id'))
-
+    else
+        if not engine.has_table('Offer'):
+            metadata = MetaData(engine)
+            Table('Offer', metadata,
+                  Column('Id', Integer, primary_key=True, nullable=False),
+                  Column('Date', Date), Column('Country', String),
+                  Column('Brand', String), Column('Price', Float),
+                  )
+            metadata.create_all()
 
 if __name__ == '__main__':
     argh.dispatch_command(main)
