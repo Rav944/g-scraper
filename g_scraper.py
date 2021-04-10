@@ -1,26 +1,20 @@
-from sqlite3 import Date
 
 import argh
-from sqlalchemy import Column, ForeignKey, Integer, String, create_engine, MetaData, Table, Float
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
-import sqlite3
+from sqlalchemy import create_engine
+
+from tabels import Base
 
 
 def main():
     try:
-        engine = create_engine('sqlite:///QScraper.db')
+        engine = create_engine('sqlite:///QScraper.db', echo=True)
     except Exception as e:
         print(e)
-    else
-        if not engine.has_table('Offer'):
-            metadata = MetaData(engine)
-            Table('Offer', metadata,
-                  Column('Id', Integer, primary_key=True, nullable=False),
-                  Column('Date', Date), Column('Country', String),
-                  Column('Brand', String), Column('Price', Float),
-                  )
-            metadata.create_all()
+    else:
+        contain_tables = [engine.has_table('offer'), engine.has_table('department'), engine.has_table('technologies')]
+        if not all(contain_tables):
+            Base.metadata.create_all(bind=engine)
+
 
 if __name__ == '__main__':
     argh.dispatch_command(main)
