@@ -21,6 +21,7 @@ class Offer(Base):
     __tablename__ = 'offer'
     id = Column('id', Integer, primary_key=True, nullable=False)
     name = Column('name', String)
+    description = Column('description', String)
     department = relationship('Department', secondary=department_association, backref='offer')
     technologies = relationship('Technologies', secondary=technologies_association, backref='offer')
     responsibilities = Column('responsibilities', String)
