@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
+
 
 Base = declarative_base()
 
@@ -22,7 +23,7 @@ class Offer(Base):
     id = Column('id', Integer, primary_key=True, nullable=False)
     name = Column('name', String)
     description = Column('description', String)
-    department = relationship('Department', secondary=department_association, backref='offer')
+    department = relationship('Department', secondary=department_association, backref=backref('offer'))
     technologies = relationship('Technologies', secondary=technologies_association, backref='offer')
     responsibilities = Column('responsibilities', String)
     requirements = Column('requirements', String)
